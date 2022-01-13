@@ -1,4 +1,4 @@
-# Toit OTA updates for Linux devices through the toit.io cloud
+# Toit OTA updates for Linux devices
 
 The latest Toit firmware can run on Linux and devices can be updated through console.toit.io. You will need Toit CLI version v1.17.2 or later. Use:
 
