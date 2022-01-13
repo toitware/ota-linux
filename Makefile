@@ -20,7 +20,7 @@ build/toit/secret.ubjson: secret.ubjson
 	cp $< $@
 
 build/toit/ota0/toit.boot: build/$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION).tgz
-	tar -C build/toit/ota0 -xvf $<
+	tar -C build/toit/ota0 -xf $<
 
 build/$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION).tgz:
 	(cd build/; toit firmware download $(FIRMWARE_MODEL) $(FIRMWARE_VERSION))
