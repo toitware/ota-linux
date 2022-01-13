@@ -8,7 +8,7 @@ FIRMWARE_VERSION ?= v1.6.0-pre.133+1aeed34db
 .PHONY: all
 all: build/bundle.tgz
 
-build/bundle.tgz: build/toit/boot.sh build/toit/secret.ubjson build/toit/ota0/toit.boot
+build/bundle.tgz: build/toit/boot.sh build/toit/secret.ubjson build/toit/ota0/factory.txt
 	tar -C build/ -czf $@ toit/
 
 build/toit/boot.sh: skeleton/boot.sh
@@ -19,8 +19,9 @@ build/toit/secret.ubjson: secret.ubjson
 	mkdir -p $(dir $@)
 	cp $< $@
 
-build/toit/ota0/toit.boot: build/$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION).tgz
+build/toit/ota0/factory.txt: build/$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION).tgz
 	tar -C build/toit/ota0 -xf $<
+	echo "$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION)" > $@
 
 build/$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION).tgz:
 	(cd build/; toit firmware download $(FIRMWARE_MODEL) $(FIRMWARE_VERSION))
