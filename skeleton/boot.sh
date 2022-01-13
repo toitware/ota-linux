@@ -8,9 +8,9 @@
 #
 #   <prefix>/boot.sh <- this file
 #   <prefix>/secret.ubjson
-#   <prefix>/toit -> <prefix>/ota0 (symbolic link)
+#   <prefix>/current -> <prefix>/ota0 (symbolic link)
 #
-#   <prefix>/ota0/metadata/current.txt <- (contains "ota0")
+#   <prefix>/ota0/metadata/this.txt <- (contains "ota0")
 #   <prefix>/ota0/metadata/next.txt <- (contains "ota1")
 #   <prefix>/ota0/config.ubjson
 #   <prefix>/ota0/flash.registry
@@ -19,7 +19,7 @@
 #   <prefix>/ota0/toit.boot
 #   <prefix>/ota0/toit.boot.image
 #
-#   <prefix>/ota1/metadata/current.txt <- (contains "ota1")
+#   <prefix>/ota1/metadata/this.txt <- (contains "ota1")
 #   <prefix>/ota1/metadata/next.txt <- (contains "ota0")
 #   <prefix>/ota1/config.ubjson
 #   <prefix>/ota0/flash.registry
@@ -38,24 +38,24 @@ if [ ! -f "$TOIT_SECURE_DATA" ]; then
   exit 1
 fi
 
-# Create the 'toit' symlink to 'ota0' if it doesn't exist yet.
-if [ ! -d "$PREFIX/toit" ]; then
+# Create the 'current' symlink to 'ota0' if it doesn't exist yet.
+if [ ! -d "$PREFIX/current" ]; then
   echo ugh
-  ln -sTf $PREFIX/ota0 $PREFIX/toit
+  ln -sTf $PREFIX/ota0 $PREFIX/current
 fi
 
 for (( ; ; )); do
-  current=$(cat $PREFIX/toit/metadata/current.txt)
-  next=$(cat $PREFIX/toit/metadata/next.txt)
+  this=$(cat $PREFIX/current/metadata/this.txt)
+  next=$(cat $PREFIX/current/metadata/next.txt)
   echo "*******************************"
-  echo "*** Running from $current"
+  echo "*** Running from $this"
   echo "*******************************"
 
-  export TOIT_CONFIG_DATA=$(realpath $PREFIX/toit/config.ubjson)
-  export TOIT_FLASH_REGISTRY_FILE=$(realpath $PREFIX/toit/flash.registry)
-  export TOIT_FLASH_UUID_FILE=$(realpath $PREFIX/toit/flash.uuid)
+  export TOIT_CONFIG_DATA=$(realpath $PREFIX/current/config.ubjson)
+  export TOIT_FLASH_REGISTRY_FILE=$(realpath $PREFIX/current/flash.registry)
+  export TOIT_FLASH_UUID_FILE=$(realpath $PREFIX/current/flash.uuid)
 
-  (cd $PREFIX/toit; ./toit.boot toit.boot.image)
+  (cd $PREFIX/current; ./toit.boot toit.boot.image)
   exit_code=$?
 
   if [ $exit_code -eq 17 ]; then
@@ -68,32 +68,32 @@ for (( ; ; )); do
     export TOIT_FLASH_REGISTRY_FILE=$(realpath $PREFIX/$next/flash.registry)
     export TOIT_FLASH_UUID_FILE=$(realpath $PREFIX/$next/flash.uuid)
     rm -f $TOIT_FLASH_UUID_FILE
-    (cd $PREFIX/$next && tar --overwrite -xzf ../toit/firmware.tgz && ./toit.boot toit.boot.image)
+    (cd $PREFIX/$next && tar --overwrite -xzf ../current/firmware.tgz && ./toit.boot toit.boot.image)
     firmware_update_exit_code=$?
     echo
     echo
     if [ $firmware_update_exit_code -eq 0 ]; then
-      ln -sTf $PREFIX/$next $PREFIX/toit
+      ln -sTf $PREFIX/$next $PREFIX/current
       echo "****************************************"
-      echo "*** Firmware update done: $current -> $next"
+      echo "*** Firmware update done: $this -> $next"
       echo "****************************************"
     else
       echo "****************************************"
-      echo "*** Firmware update failed (still $current)"
+      echo "*** Firmware update failed (still $this)"
       echo "****************************************"
     fi
     echo
     echo
   elif [ $exit_code -eq 0 ]; then
     echo "****************************************"
-    echo "*** Firmware restarting (still $current)"
+    echo "*** Firmware restarting (still $this)"
     echo "****************************************"
   else
     echo "***********************************************"
-    echo "*** Firmware crashed with code=$exit_code (still $current)"
+    echo "*** Firmware crashed with code=$exit_code (still $this)"
     echo "***********************************************"
     # Clear flash.registry and flash.validity files and try again.
-    rm -f $TOIT_FLASH_REGISTRY_FILE $PREFIX/toit/flash.validity
+    rm -f $TOIT_FLASH_REGISTRY_FILE $PREFIX/current/flash.validity
     sleep 5
   fi
 done
