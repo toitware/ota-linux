@@ -33,9 +33,9 @@ toit/boot.sh
 toit/boot.sh
 toit/secret.ubjson
 toit/current/config.ubjson
-toit/current/flash.registry <- memory mapped storage created by toit.boot
-toit/current/flash.uuid <- marker left by toit.boot
-toit/current/flash.validity <- marker left by toit.boot
+toit/current/flash.registry  <- memory mapped storage created by toit.boot
+toit/current/flash.uuid      <- marker left by toit.boot
+toit/current/flash.validity  <- marker left by toit.boot
 toit/current/toit.boot
 toit/current/toit.boot.image
 ```
