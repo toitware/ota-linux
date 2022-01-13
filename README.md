@@ -30,6 +30,7 @@ toit/boot.sh
 ## Directory structure
 
 ```
+toit/boot.sh
 toit/secret.ubjson
 toit/current/config.ubjson
 toit/current/flash.registry <- memory mapped storage created by toit.boot
