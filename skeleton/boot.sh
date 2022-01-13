@@ -40,7 +40,6 @@ fi
 
 # Create the 'current' symlink to 'ota0' if it doesn't exist yet.
 if [ ! -d "$PREFIX/current" ]; then
-  echo ugh
   ln -sTf $PREFIX/ota0 $PREFIX/current
 fi
 

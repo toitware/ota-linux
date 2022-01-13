@@ -3,12 +3,12 @@
 # found in the LICENSE file.
 
 FIRMWARE_MODEL   ?= armv5te-linux
-FIRMWARE_VERSION ?= v1.6.0-pre.133+1aeed34db
+FIRMWARE_VERSION ?= v1.6.0-pre.135+d913915d7
 
 .PHONY: all
-all: build/bundle.tgz
+all: build/toit-$(FIRMWARE_MODEL).tgz
 
-build/bundle.tgz: build/toit/boot.sh build/toit/secret.ubjson build/toit/ota0/factory.txt
+build/toit-$(FIRMWARE_MODEL).tgz: build/toit/boot.sh build/toit/secret.ubjson build/toit/ota0/factory.txt
 	tar -C build/ -czf $@ toit/
 
 build/toit/boot.sh: skeleton/boot.sh
@@ -19,12 +19,13 @@ build/toit/secret.ubjson: secret.ubjson
 	mkdir -p $(dir $@)
 	cp $< $@
 
-build/toit/ota0/factory.txt: build/$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION).tgz
+build/toit/ota0/factory.txt: build/download/$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION).tgz
 	tar -C build/toit/ota0 -xf $<
 	echo "$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION)" > $@
 
-build/$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION).tgz:
-	(cd build/; toit firmware download $(FIRMWARE_MODEL) $(FIRMWARE_VERSION))
+build/download/$(FIRMWARE_MODEL)-$(FIRMWARE_VERSION).tgz:
+	mkdir -p $(dir $@)
+	(cd $(dir $@); toit firmware download $(FIRMWARE_MODEL) $(FIRMWARE_VERSION))
 
 secret.ubjson:
 	$(error Fetch a device identity using: toit device create-identity)
