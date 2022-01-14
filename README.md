@@ -1,4 +1,4 @@
-# Toit OTA updates for Linux devices
+# Toit OTA updates for ARM-based Linux devices
 
 The latest Toit firmware (only available on the alpha channel) published through [toit.io](https://toit.io/) can run on 
 Linux and devices can be updated through [console.toit.io](https://console.toit.io/). 
