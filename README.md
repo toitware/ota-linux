@@ -1,11 +1,11 @@
-# Toit OTA updates for ARM-based Linux devices
+# Toit OTA updates for Linux devices
 
 The latest Toit firmware (only available on the alpha channel) published through [toit.io](https://toit.io/) can run on 
 Linux and devices can be updated through [console.toit.io](https://console.toit.io/). 
 
 ## Build the bundle on your workstation
 
-First step is to build the bundle on your workstation (not the ARM device). Clone this repository
+First step is to build the bundle on your workstation (not an ARM device). Clone this repository
 and enter the directory you cloned it into (e.g. `ota-linux`). You will need Toit CLI version 
 v1.17.2 or later. [Download it](https://docs.toit.io/getstarted/installation/linux) or use:
 
@@ -25,11 +25,18 @@ This will leave you with a `secret.ubjson` file. Now run:
 make
 ```
 
-and you will get a `build/toit-armv5te-linux.tgz` file that can be installed on an ARMv5 device. 
+and you will get a `build/toit-armv5te-linux.tgz` file that can be installed on an ARMv5 device. If you want
+to run it on your x64 Linux device, you can use:
 
-## Install on your ARM device
+``` sh
+FIRMWARE_MODEL=x64-linux make
+```
 
-Copy the `build/toit-armv5te-linux.tgz` bundle to your ARM device and untar it there:
+and the resulting bundle will be in `build/toit-x64-linux.tgz`.
+
+## Install on your device
+
+Copy the `build/toit-armv5te-linux.tgz` or `build/toit-x64-linux.tgz` bundle to your device and untar it there:
 
 ```
 tar -xvzf toit-armv5te-linux.tgz
