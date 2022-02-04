@@ -3,7 +3,7 @@
 # found in the LICENSE file.
 
 FIRMWARE_MODEL   ?= armv5te-linux
-FIRMWARE_VERSION ?= v1.6.0-rc.4
+FIRMWARE_VERSION ?= v1.6.0-rc.5
 
 .PHONY: all
 all: build/toit-$(FIRMWARE_MODEL).tgz
