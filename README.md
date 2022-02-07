@@ -1,6 +1,6 @@
 # Toit OTA updates for Linux devices
 
-The latest Toit firmware (only available on the alpha channel) published through [toit.io](https://toit.io/) can run on 
+Starting with v1.6.0, Toit firmware published through [toit.io](https://toit.io/) can run on 
 Linux and devices can be updated through [console.toit.io](https://console.toit.io/). 
 
 ## Build the bundle on your workstation
